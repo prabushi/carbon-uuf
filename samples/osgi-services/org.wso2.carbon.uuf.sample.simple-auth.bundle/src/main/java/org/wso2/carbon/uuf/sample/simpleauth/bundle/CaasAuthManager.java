@@ -17,6 +17,7 @@
 package org.wso2.carbon.uuf.sample.simpleauth.bundle;
 
 import org.wso2.carbon.security.caas.user.core.exception.AuthorizationStoreException;
+import org.wso2.carbon.security.caas.user.core.exception.IdentityStoreException;
 import org.wso2.carbon.security.caas.user.core.store.AuthorizationStore;
 import org.wso2.carbon.uuf.sample.simpleauth.bundle.CaasUser;
 import org.wso2.carbon.security.caas.user.core.bean.Action;
@@ -91,5 +92,15 @@ public class CaasAuthManager {
                 .setIdentityStore(realmService.getIdentityStore())
                 .setAuthorizationStore(realmService.getAuthorizationStore())
                 .build();
+    }
+
+    //assign roles
+    public void assignRoles(User user, List<Role> roles) throws IdentityStoreException, AuthorizationStoreException {
+        user.updateRoles(roles);
+    }
+
+    public void updateRole(Role role, List<Permission> permissions) throws AuthorizationStoreException {
+        AuthorizationStore authorizationStore = realmService.getAuthorizationStore();
+        authorizationStore.updatePermissionsInRole(role.getRoleId(), DEFAULT_AUTHORIZATION_STORE, permissions);
     }
 }
