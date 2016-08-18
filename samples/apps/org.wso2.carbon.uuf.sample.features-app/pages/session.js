@@ -18,9 +18,7 @@
 function onRequest(env) {
     var session = getSession();
     if (!session) {
-       var SimpleAuthHandler = Java.type("org.wso2.carbon.uuf.sample.simpleauth.bundle.SimpleAuthHandler");
-       var user = SimpleAuthHandler.authenticate("admin", "admin");
-       session = createSession(user);
+        session = createSession("admin");
     }
     return {"username": session.getUser().getUsername()};
 }
