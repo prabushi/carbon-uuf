@@ -19,8 +19,10 @@ package org.wso2.carbon.uuf;
 import org.apache.commons.io.IOUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.wso2.carbon.deployment.engine.config.DeploymentConfiguration;
 import org.wso2.carbon.uuf.api.Configuration;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor;
 
 import java.util.Map;
 
@@ -28,7 +30,8 @@ public class ConfigurationTest {
 
     public static Map<?, ?> loadConfiguration(String filename) throws Exception {
         String content = IOUtils.toString(ConfigurationTest.class.getResourceAsStream("/" + filename), "UTF-8");
-        return new Yaml().loadAs(content, Map.class);
+        return new Yaml(new CustomClassLoaderConstructor(DeploymentConfiguration.class,
+                                                         DeploymentConfiguration.class.getClassLoader())).loadAs(content, Map.class);
     }
 
     @Test

@@ -16,8 +16,7 @@
 
 package org.wso2.carbon.uuf.osgi;
 
-import org.ops4j.pax.exam.Configuration;
-import org.ops4j.pax.exam.CoreOptions;
+import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
@@ -27,9 +26,9 @@ import org.osgi.framework.ServiceReference;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+import org.wso2.carbon.container.CarbonContainerFactory;
 import org.wso2.carbon.kernel.utils.CarbonServerInfo;
 import org.wso2.carbon.uuf.core.API;
-import org.wso2.carbon.uuf.osgi.utils.OSGiTestUtils;
 import org.wso2.carbon.uuf.sample.petsstore.bundle.service.PetsStoreService;
 
 import javax.inject.Inject;
@@ -40,6 +39,7 @@ import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 
 @Listeners(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
+@ExamFactory(CarbonContainerFactory.class)
 public class OSGiServicesTest {
 
     @Inject
@@ -54,27 +54,43 @@ public class OSGiServicesTest {
      * @return Options list of pax exam container
      * @throws Exception
      */
-    @Configuration
-    public Option[] createConfiguration() throws Exception {
-        OSGiTestUtils.setEnv();
-        Option[] options = CoreOptions.options(
-                getBundleOption("org.wso2.carbon.deployment.engine", "org.wso2.carbon.deployment"),
-                getBundleOption("org.wso2.carbon.deployment.notifier", "org.wso2.carbon.deployment"),
-                getBundleOption("geronimo-jms_1.1_spec", "org.apache.geronimo.specs"),
-                getBundleOption("commons-pool", "commons-pool.wso2"),
-                getBundleOption("org.wso2.carbon.uuf.sample.pets-store.bundle", "org.wso2.carbon.uuf.sample"),
-                getBundleOption("commons-io", "commons-io.wso2"),
-                getBundleOption("org.wso2.carbon.jndi", "org.wso2.carbon.jndi"),
-                getBundleOption("org.wso2.carbon.caching", "org.wso2.carbon.caching"),
-                getBundleOption("gson", "com.google.code.gson"),
-                getBundleOption("guava", "com.google.guava"),
-                getBundleOption("commons-lang3", "org.apache.commons"),
-                getBundleOption("asm", "org.ow2.asm"),
-                getBundleOption("org.wso2.carbon.uuf.renderablecreator.html", "org.wso2.carbon.uuf"),
-                getBundleOption("org.wso2.carbon.uuf.core", "org.wso2.carbon.uuf")
-        );
-        return OSGiTestUtils.getDefaultPaxOptions(options);
-    }
+//    @Configuration
+//    public Option[] createConfiguration() throws Exception {
+//        OSGiTestUtils.setEnv();
+//        Option[] options = CoreOptions.options(
+//                getBundleOption("org.wso2.carbon.deployment.engine", "org.wso2.carbon.deployment"),
+//                getBundleOption("org.wso2.carbon.deployment.notifier", "org.wso2.carbon.deployment"),
+//                getBundleOption("geronimo-jms_1.1_spec", "org.apache.geronimo.specs"),
+//                getBundleOption("commons-pool", "commons-pool.wso2"),
+//                getBundleOption("org.wso2.carbon.uuf.sample.pets-store.bundle", "org.wso2.carbon.uuf.sample"),
+//                getBundleOption("commons-io", "commons-io.wso2"),
+//                getBundleOption("org.wso2.carbon.jndi", "org.wso2.carbon.jndi"),
+//                getBundleOption("org.wso2.carbon.caching", "org.wso2.carbon.caching"),
+//                getBundleOption("gson", "com.google.code.gson"),
+//                getBundleOption("guava", "com.google.guava"),
+//                getBundleOption("commons-lang3", "org.apache.commons"),
+//                getBundleOption("asm", "org.ow2.asm"),
+//                getBundleOption("org.wso2.carbon.uuf.renderablecreator.html", "org.wso2.carbon.uuf"),
+//                getBundleOption("msf4j-core", "org.wso2.msf4j"),
+//                getBundleOption("org.wso2.carbon.messaging", "org.wso2.carbon.messaging"),
+//                getBundleOption("org.wso2.carbon.transport.http.netty", "org.wso2.carbon.transport"),
+//                getBundleOption("org.eclipse.osgi", "org.wso2.eclipse.osgi"),
+//                getBundleOption("javax.ws.rs-api", "javax.ws.rs", "2.0"),
+//                getBundleOption("jaxrs-delegates", "org.wso2.msf4j", "2.0.1-SNAPSHOT"),
+//                getBundleOption("jsr305", "com.google.code.findbugs", "2.0.1"),
+//                getBundleOption("org.apache.servicemix.bundles.commons-beanutils", "org.apache.servicemix.bundles",
+//                                "1.8.3_2"),
+//                getBundleOption("nimbus-jose-jwt", "com.nimbusds", "2.25"),
+//                getBundleOption("slf4j-api", "org.slf4j"),
+//                getBundleOption("slf4j-log4j12", "org.slf4j"),
+//                getBundleOption("swagger-core", "io.swagger", "1.5.8"),
+//                getBundleOption("swagger-jaxrs", "io.swagger", "1.5.8"),
+//                getBundleOption("swagger-annotations", "io.swagger", "1.5.8"),
+////                getBundleOption("msf4j-core", "org.wso2.msf4j"),
+//                getBundleOption("org.wso2.carbon.uuf.core", "org.wso2.carbon.uuf")
+//        );
+//        return OSGiTestUtils.getDefaultPaxOptions(options);
+//    }
 
     @Test
     public void testPetsStoreService() {
@@ -116,5 +132,9 @@ public class OSGiServicesTest {
      */
     private Option getBundleOption(String artifactId, String groupId) {
         return mavenBundle().artifactId(artifactId).groupId(groupId).versionAsInProject();
+    }
+
+    private Option getBundleOption(String artifactId, String groupId, String version) {
+        return mavenBundle().artifactId(artifactId).groupId(groupId).version(version);
     }
 }

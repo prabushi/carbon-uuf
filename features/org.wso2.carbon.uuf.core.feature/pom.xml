@@ -40,6 +40,10 @@
             <artifactId>org.wso2.carbon.uuf.core</artifactId>
             <version>${carbon.uuf.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.deployment</groupId>
+            <artifactId>org.wso2.carbon.deployment.engine</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -90,6 +94,10 @@
                                 <bundle>
                                     <symbolicName>com.google.guava</symbolicName>
                                     <version>${guava.version}.0</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>org.wso2.carbon.deployment.engine</symbolicName>
+                                    <version>${carbon.deployment.version}</version>
                                 </bundle>
                             </bundles>
                         </configuration>

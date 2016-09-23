@@ -18,6 +18,7 @@ package org.wso2.carbon.uuf.internal.core.create;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import org.wso2.carbon.deployment.engine.config.DeploymentConfiguration;
 import org.wso2.carbon.uuf.api.Placeholder;
 import org.wso2.carbon.uuf.core.App;
 import org.wso2.carbon.uuf.core.Component;
@@ -30,7 +31,6 @@ import org.wso2.carbon.uuf.exception.InvalidTypeException;
 import org.wso2.carbon.uuf.exception.MalformedConfigurationException;
 import org.wso2.carbon.uuf.exception.UUFException;
 import org.wso2.carbon.uuf.internal.core.UriPatten;
-import org.wso2.carbon.uuf.internal.core.auth.SessionRegistry;
 import org.wso2.carbon.uuf.internal.util.NameUtils;
 import org.wso2.carbon.uuf.reference.AppReference;
 import org.wso2.carbon.uuf.reference.ComponentReference;
@@ -41,6 +41,7 @@ import org.wso2.carbon.uuf.reference.PageReference;
 import org.wso2.carbon.uuf.reference.ThemeReference;
 import org.wso2.carbon.uuf.spi.RenderableCreator;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -267,7 +268,9 @@ public class AppCreator {
     private Theme createTheme(ThemeReference themeReference) {
         Map<?, ?> rawConfig;
         try {
-            rawConfig = new Yaml().loadAs(themeReference.getThemeConfig().getContent(), Map.class);
+            rawConfig = new Yaml(new CustomClassLoaderConstructor(DeploymentConfiguration.class,
+                                                                  DeploymentConfiguration.class.getClassLoader()))
+                    .loadAs(themeReference.getThemeConfig().getContent(), Map.class);
         } catch (Exception e) {
             // Yaml.loadAs() throws an Exception
             throw new MalformedConfigurationException(
